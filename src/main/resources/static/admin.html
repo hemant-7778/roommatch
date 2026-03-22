@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - RoomMatch</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">
+          <i class="fas fa-home me-2"></i>RoomMatch Admin
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-center">
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard.html">Return to App</a>
+            </li>
+            <li class="nav-item ms-3">
+              <button onclick="logout()" class="btn btn-outline-custom btn-sm">
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container" style="padding-top: 100px; padding-bottom: 50px">
+      <div class="glass-card p-4 animate-fade-in mb-4">
+        <h2 class="fw-bold mb-0">Admin Dashboard</h2>
+        <p class="text-muted">Manage users, rooms, and reports</p>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <ul class="nav nav-tabs border-secondary mb-4 animate-fade-in" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active text-white fw-bold" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="true" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-bottom: none; border-radius: 10px 10px 0 0;">Reports</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link text-white ms-2" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-bottom: none; border-radius: 10px 10px 0 0;">Users</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link text-white ms-2" id="rooms-tab" data-bs-toggle="tab" data-bs-target="#rooms" type="button" role="tab" aria-controls="rooms" aria-selected="false" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-bottom: none; border-radius: 10px 10px 0 0;">Rooms</button>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content" id="adminTabsContent">
+        <!-- Reports Tab -->
+        <div class="tab-pane fade show active" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+          <div class="glass-card p-0 overflow-hidden">
+            <div class="p-3 border-bottom border-secondary">
+              <h5 class="mb-0 text-white">Active Reports</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-dark table-hover mb-0" style="--bs-table-bg: transparent">
+                <thead>
+                  <tr>
+                    <th scope="col" class="ps-4">Date</th>
+                    <th scope="col">Reported User</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col">Reporter</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-end pe-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="reportsTableBody">
+                  <tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+          <div class="glass-card p-0 overflow-hidden">
+            <div class="p-3 border-bottom border-secondary">
+              <h5 class="mb-0 text-white">All Users</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-dark table-hover mb-0" style="--bs-table-bg: transparent">
+                <thead>
+                  <tr>
+                    <th scope="col" class="ps-4">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-end pe-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <tr><td colspan="5" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rooms Tab -->
+        <div class="tab-pane fade" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
+          <div class="glass-card p-0 overflow-hidden">
+            <div class="p-3 border-bottom border-secondary">
+              <h5 class="mb-0 text-white">All Rooms</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-dark table-hover mb-0" style="--bs-table-bg: transparent">
+                <thead>
+                  <tr>
+                    <th scope="col" class="ps-4">ID</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Rent</th>
+                    <th scope="col" class="text-end pe-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="roomsTableBody">
+                  <tr><td colspan="5" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || !user.roles || !user.roles.includes("ADMIN")) {
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+          alert("Access Denied: Administrator Credentials Required.");
+          window.location.href = "admin-login.html";
+          return;
+        }
+        
+        loadAdminDashboard();
+      });
+    </script>
+  </body>
+</html>

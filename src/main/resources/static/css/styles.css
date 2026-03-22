@@ -1,0 +1,328 @@
+/* =========================================
+   1. SETUP & VARIABLES
+   ========================================= */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap");
+
+:root {
+  /* Core Palette - Gradient Theme */
+  --bg-gradient: linear-gradient(135deg, #0f2027 0%, #2c5364 50%, #ff7e5f 100%);
+
+  /* Colors */
+  --primary: #ff7e5f; /* Coral */
+  --primary-hover: #ff6b4a;
+  --secondary: #2c5364; /* Deep Teal */
+  --accent: #00d2ff; /* Cyan/Blue Accent */
+
+  /* Text */
+  --text-main: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.85); /* High contrast on dark gradient */
+  --text-dark: #1e293b; /* For light cards if needed */
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-blur: 15px;
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
+  /* Shapes */
+  --radius-xl: 20px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+/* =========================================
+   2. GLOBAL RESETS
+   ========================================= */
+body {
+  font-family: "Poppins", sans-serif; /* User requested Poppins or Inter */
+  background: var(--bg-gradient);
+  background-attachment: fixed; /* Keep gradient fixed on scroll */
+  color: var(--text-main);
+  min-height: 100vh;
+  margin: 0;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+p {
+  color: var(--text-muted);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+/* =========================================
+   3. UTILITIES & GLASS
+   ========================================= */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  padding: 2rem;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.glass-nav {
+  background: rgba(15, 32, 39, 0.7); /* Slightly darker for contrast */
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.shadow-soft {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================
+   4. NAVIGATION
+   ========================================= */
+.navbar {
+  padding: 1.2rem 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-brand {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff !important;
+  letter-spacing: -0.5px;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin: 0 0.5rem;
+  position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--primary) !important;
+}
+
+/* =========================================
+   5. BUTTONS
+   ========================================= */
+.btn {
+  padding: 0.8rem 2rem;
+  border-radius: 50px; /* Rounded pill style */
+  font-weight: 600;
+  text-transform: capitalize;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-primary-custom {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255, 126, 95, 0.4);
+}
+
+.btn-primary-custom:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 126, 95, 0.6);
+  color: #fff;
+}
+
+.btn-secondary-custom {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary-custom:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   6. HERO SECTION
+   ========================================= */
+.hero-section {
+  padding: 8rem 0 5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to right, #fff, #ff7e5f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+  max-width: 500px;
+}
+
+.hero-card-float {
+  position: absolute;
+  top: 20%;
+  right: -20px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333; /* Dark text for contrast on light card */
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  max-width: 250px;
+  z-index: 2;
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-card-float p {
+  color: #555; /* Darker muted text inside light card */
+  margin: 0;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* =========================================
+   7. SECTIONS & CARDS
+   ========================================= */
+.section-title {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-title h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Smart Search */
+.search-container {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+}
+
+/* Feature Cards */
+.feature-card {
+  height: 100%;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.feature-card:hover {
+  transform: translateY(-10px) scale(1.02);
+}
+
+.feature-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+}
+
+/* How It Works Icons */
+.step-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #fff;
+  margin: 0 auto 1.5rem auto;
+  box-shadow: 0 10px 20px rgba(255, 126, 95, 0.3);
+}
+
+/* =========================================
+   8. FORMS & INPUTS
+   ========================================= */
+.form-control,
+.form-select {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+  border-radius: var(--radius-sm);
+  padding: 0.8rem 1.2rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 4px rgba(255, 126, 95, 0.2) !important;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Fix dropdown options visibility */
+select option {
+  background-color: #2c5364; /* Match secondary dark color */
+  color: #fff;
+}
+
+/* =========================================
+   9. FOOTER
+   ========================================= */
+footer {
+  background: rgba(15, 32, 39, 0.9);
+  padding: 5rem 0 2rem 0;
+  margin-top: 5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  margin-right: 10px;
+  transition: all 0.3s;
+}
+
+.social-icon:hover {
+  background: var(--primary);
+  transform: translateY(-3px);
+}
