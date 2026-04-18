@@ -14,4 +14,5 @@ public interface RoomRequestRepository extends JpaRepository<RoomRequest, Long> 
     List<RoomRequest> findByRequester(User requester);
     
     List<RoomRequest> findByRoom_Owner(User owner);
+    long countByRoom_OwnerAndStatus(User owner, RoomRequest.RequestStatus status);
 }

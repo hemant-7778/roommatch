@@ -40,6 +40,10 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail()).orElse(null);
+        if (user != null && user.getStatus() == com.roommatch.model.UserStatus.BLOCKED) {
+            return ResponseEntity.badRequest().body(new MessageResponse("you are ban"));
+        }
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));

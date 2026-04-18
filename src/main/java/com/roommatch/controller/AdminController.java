@@ -2,6 +2,8 @@ package com.roommatch.controller;
 
 import com.roommatch.repository.UserRepository;
 import com.roommatch.repository.RoomRepository;
+import com.roommatch.repository.ReportRepository;
+import com.roommatch.model.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +20,19 @@ public class AdminController {
 
     @Autowired
     RoomRepository roomRepository;
+
+    @Autowired
+    ReportRepository reportRepository;
+
+    @GetMapping("/stats")
+    public ResponseEntity<?> getAdminStats() {
+        java.util.Map<String, Object> stats = new java.util.HashMap<>();
+        stats.put("totalUsers", userRepository.count());
+        stats.put("totalRooms", roomRepository.count());
+        stats.put("pendingReports", reportRepository.countByStatus(Report.ReportStatus.PENDING));
+
+        return ResponseEntity.ok(stats);
+    }
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {

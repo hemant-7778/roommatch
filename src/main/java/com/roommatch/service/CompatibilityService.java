@@ -30,6 +30,7 @@ public class CompatibilityService {
         // 2. Get all other users in the same city
         List<User> potentialMatches = userRepository.findAll().stream()
                 .filter(u -> !u.getId().equals(currentUser.getId())) // Exclude self
+                .filter(u -> u.getStatus() == com.roommatch.model.UserStatus.ACTIVE) // Exclude blocked/banned
                 .filter(u -> u.getCity() != null && u.getCity().equalsIgnoreCase(currentUser.getCity())) // Same city
                 .collect(Collectors.toList());
 

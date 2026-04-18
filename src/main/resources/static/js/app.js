@@ -197,8 +197,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   // Initial Unread Count Load
   updateUnreadCount();
+  updateRequestUnreadCount();
   // Poll every 10 seconds
-  setInterval(updateUnreadCount, 10000);
+  setInterval(() => {
+    updateUnreadCount();
+    updateRequestUnreadCount();
+  }, 10000);
 });
 
 // Helper for authorized fetch
@@ -919,7 +923,7 @@ async function loadMyRequests() {
                     <div class="glass-card p-3 d-flex align-items-center gap-3">
                         <img src="${room.imageUrl || "https://via.placeholder.com/100"}" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
                         <div class="flex-grow-1">
-                            <h5 class="mb-1">$${room.rent} - ${room.location}</h5>
+                            <h5 class="mb-1">₹${room.rent} - ${room.location}</h5>
                             <span class="badge bg-${statusColor}">${req.status}</span>
                         </div>
                         <a href="rooms.html" class="btn btn-sm btn-outline-light">View Room</a>
@@ -1187,6 +1191,31 @@ async function updateUnreadCount() {
   }
 }
 
+async function updateRequestUnreadCount() {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  try {
+    const response = await authFetch(`${API_URL}/requests/incoming/count`);
+    if (response.ok) {
+      const data = await response.json();
+      const count = data.count;
+
+      const badge = document.getElementById("request-unread-badge");
+      if (badge) {
+        if (count > 0) {
+          badge.textContent = count > 99 ? "99+" : count;
+          badge.classList.remove("d-none");
+        } else {
+          badge.classList.add("d-none");
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching incoming request count", error);
+  }
+}
+
 // ---- Report Functions ----
 
 window.openReportModal = function (userId = null) {
@@ -1252,6 +1281,7 @@ async function loadAdminDashboard() {
   const container = document.getElementById("reportsTableBody");
   if (!container) return; // Not on admin page
 
+  loadAdminStats();
   loadAdminUsers();
   loadAdminRooms();
 
@@ -1285,7 +1315,11 @@ async function loadAdminDashboard() {
             `
                 : ""
             }
-            <button class="btn btn-sm btn-danger" onclick="banUser(${report.reportedUser.id})">Ban User</button>
+            ${report.reportedUser.status === 'BLOCKED' ? 
+                `<button class="btn btn-sm btn-success" onclick="unbanUser(${report.reportedUser.id})">Unban User</button>` : 
+                `<button class="btn btn-sm btn-danger" onclick="banUser(${report.reportedUser.id})">Ban User</button>`
+            }
+            <button class="btn btn-sm btn-primary ms-1" onclick="startChat(${report.reportedUser.id})">Contact User</button>
         </td>
       `;
       container.appendChild(tr);
@@ -1339,6 +1373,29 @@ window.banUser = async function (userId) {
   }
 };
 
+window.unbanUser = async function (userId) {
+  if (
+    !confirm(
+      "Are you sure you want to UNBAN this user?",
+    )
+  )
+    return;
+  try {
+    const response = await authFetch(`${API_URL}/reports/unban/${userId}`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      alert("User has been unbanned.");
+      loadAdminDashboard(); // This calls loadAdminUsers inside
+    } else {
+      alert("Failed to unban user.");
+    }
+  } catch (e) {
+    console.error(e);
+    alert("Error unbanning user.");
+  }
+};
+
 async function loadAdminUsers() {
   const container = document.getElementById("usersTableBody");
   if (!container) return;
@@ -1359,6 +1416,10 @@ async function loadAdminUsers() {
         <td>${user.email}</td>
         <td><span class="badge bg-${user.status === 'BLOCKED' ? 'danger' : 'success'}">${user.status || 'ACTIVE'}</span></td>
         <td class="text-end pe-4">
+            ${user.status === 'BLOCKED' ? 
+                `<button class="btn btn-sm btn-success me-1" onclick="unbanUser(${user.id})">Unban</button>` : 
+                `<button class="btn btn-sm btn-warning me-1" onclick="banUser(${user.id})">Ban</button>`
+            }
             <button class="btn btn-sm btn-danger" onclick="deleteAdminUser(${user.id})">Delete</button>
         </td>
       `;
@@ -1366,6 +1427,20 @@ async function loadAdminUsers() {
     });
   } catch (error) {
     container.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error loading users</td></tr>';
+  }
+}
+
+async function loadAdminStats() {
+  try {
+    const response = await authFetch(`${API_URL}/admin/stats`);
+    if (response.ok) {
+      const stats = await response.json();
+      document.getElementById("stat-users").textContent = stats.totalUsers;
+      document.getElementById("stat-rooms").textContent = stats.totalRooms;
+      document.getElementById("stat-reports").textContent = stats.pendingReports;
+    }
+  } catch (e) {
+    console.error("Error loading admin stats", e);
   }
 }
 

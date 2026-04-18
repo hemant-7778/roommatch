@@ -6,6 +6,8 @@ import com.roommatch.model.User;
 import com.roommatch.repository.RoomRepository;
 import com.roommatch.repository.RoomRequestRepository;
 import com.roommatch.repository.UserRepository;
+import com.roommatch.repository.MessageRepository;
+import com.roommatch.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +27,9 @@ public class RequestController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    MessageRepository messageRepository;
 
     @PostMapping("/{roomId}")
     public ResponseEntity<?> sendRequest(@PathVariable Long roomId) {
@@ -93,6 +98,16 @@ public class RequestController {
         }
         
         return ResponseEntity.ok(requestRepository.save(request));
+    }
+    
+    @GetMapping("/incoming/count")
+    public ResponseEntity<?> getIncomingRequestsCount() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElse(null);
+        if (user == null) return ResponseEntity.badRequest().body("User not found");
+
+        long count = requestRepository.countByRoom_OwnerAndStatus(user, RoomRequest.RequestStatus.PENDING);
+        return ResponseEntity.ok(java.util.Collections.singletonMap("count", count));
     }
     
     // Additional endpoints for accepting/rejecting requests (for room owners) can be added here

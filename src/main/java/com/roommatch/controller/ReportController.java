@@ -62,4 +62,13 @@ public class ReportController {
         userRepository.save(user);
         return ResponseEntity.ok("User blocked successfully");
     }
+
+    @PostMapping("/unban/{userId}")
+    public ResponseEntity<?> unbanUser(@PathVariable Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) return ResponseEntity.badRequest().body("User not found");
+        user.setStatus(com.roommatch.model.UserStatus.ACTIVE);
+        userRepository.save(user);
+        return ResponseEntity.ok("User unblocked successfully");
+    }
 }

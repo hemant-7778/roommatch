@@ -11,7 +11,7 @@ import java.util.List;
 public interface RoomRepository extends JpaRepository<Room, Long> {
     List<Room> findByOwner(User owner);
     List<Room> findByAvailable(Boolean available);
-    @org.springframework.data.jpa.repository.Query("SELECT r FROM Room r WHERE r.available = true AND " +
+    @org.springframework.data.jpa.repository.Query("SELECT r FROM Room r WHERE r.available = true AND r.owner.status = com.roommatch.model.UserStatus.ACTIVE AND " +
            "(:location IS NULL OR LOWER(r.location) LIKE LOWER(CONCAT('%', :location, '%'))) AND " +
            "(:minRent IS NULL OR r.rent >= :minRent) AND " +
            "(:maxRent IS NULL OR r.rent <= :maxRent) AND " +
